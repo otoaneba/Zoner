@@ -5,13 +5,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function Settings() {
   const [kidGoal, setKidGoal] = useState<string>('10');
   const [parentGoal, setParentGoal] = useState<string>('6');
+  const [babyAge, setBabyAge] = useState<string>('6'); // Age in months
 
   useEffect(() => {
     const loadGoals = async () => {
       const savedKidGoal = await AsyncStorage.getItem('kidGoal');
       const savedParentGoal = await AsyncStorage.getItem('parentGoal');
+      const savedBabyAge = await AsyncStorage.getItem('babyAge');
       if (savedKidGoal) setKidGoal(savedKidGoal);
       if (savedParentGoal) setParentGoal(savedParentGoal);
+      if (savedBabyAge) setBabyAge(savedBabyAge);
     };
     loadGoals();
   }, []);
@@ -20,6 +23,7 @@ export default function Settings() {
     try {
       await AsyncStorage.setItem('kidGoal', kidGoal);
       await AsyncStorage.setItem('parentGoal', parentGoal);
+      await AsyncStorage.setItem('babyAge', babyAge);
     } catch (e) {
       console.log('Error saving goals', e);
     }
@@ -40,6 +44,13 @@ export default function Settings() {
         style={styles.input}
         value={parentGoal}
         onChangeText={setParentGoal}
+        keyboardType="numeric"
+      />
+      <Text>Baby's Age (months):</Text>
+      <TextInput
+        style={styles.input}
+        value={babyAge}
+        onChangeText={setBabyAge}
         keyboardType="numeric"
       />
       <Button title="Save Goals" onPress={saveGoals} />
